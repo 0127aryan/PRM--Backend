@@ -1,24 +1,16 @@
-# Nestjs specific
-/dist
+# dependencies
 /node_modules
-/build
-/tmp
 
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+# build
+/dist
 
-# dotenv environment variable files
+# env (secrets — never commit)
 .env
-.env.development
-.env.test
-.env.production
+.env.local
+.env.*.local
 
-# temp directory
-.temp
-.tmp
+# logs & coverage
+*.log
+/coverage
+
+package-lock.json
