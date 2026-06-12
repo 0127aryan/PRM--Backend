@@ -1,5 +1,5 @@
-import { SkillCategory } from '../database/enums';
 import { Proficiency, ResourceStatus, SkillCategory } from '../database/enums';
+
 import {
   candidateHasRequiredSkillMatch,
   formatRequestedSkills,
