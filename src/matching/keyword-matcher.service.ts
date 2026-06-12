@@ -6,6 +6,16 @@ import {
   RankedEmployeeMatch,
   SkillMatchInput,
 } from './matching.types';
+import {
+  candidateHasRequiredSkillMatch,
+  hasExplicitSkillTokens,
+  hasSkillFilter,
+} from './matching-skill-filter.util';
+import { ParsedRequirement } from './parsed-requirement.types';
+import {
+  passesRequirementFilters,
+  proficiencyMeetsMinimum,
+} from './parse-requirement.util';
 
 @Injectable()
 export class KeywordMatcherService {
@@ -13,15 +23,44 @@ export class KeywordMatcherService {
     candidates: EmployeeMatchCandidate[],
     keywords: string[],
     skillIds: number[],
+    requirement?: ParsedRequirement,
   ): RankedEmployeeMatch[] {
     const normalizedKeywords = keywords
       .map((k) => k.trim().toLowerCase())
       .filter(Boolean);
-    const hasFilter = normalizedKeywords.length > 0 || skillIds.length > 0;
+    const categories = requirement?.skillCategories ?? [];
+    const skillFilterActive = hasSkillFilter(
+      requirement,
+      normalizedKeywords,
+      skillIds,
+    );
+    const explicitSkillTokens = hasExplicitSkillTokens(
+      normalizedKeywords,
+      skillIds,
+    );
 
     const ranked = candidates
-      .map((candidate) => this.scoreCandidate(candidate, normalizedKeywords, skillIds))
-      .filter((row) => !hasFilter || row.matchedSkills.length > 0)
+      .filter((candidate) => passesRequirementFilters(candidate, requirement))
+      .filter(
+        (candidate) =>
+          !skillFilterActive ||
+          candidateHasRequiredSkillMatch(
+            candidate,
+            requirement,
+            normalizedKeywords,
+            skillIds,
+          ),
+      )
+      .map((candidate) =>
+        this.scoreCandidate(
+          candidate,
+          normalizedKeywords,
+          skillIds,
+          requirement,
+          explicitSkillTokens,
+        ),
+      )
+      .filter((row) => !skillFilterActive || row.matchedSkills.length > 0)
       .sort((a, b) => b.score - a.score || a.fullName.localeCompare(b.fullName));
 
     return ranked;
@@ -31,10 +70,35 @@ export class KeywordMatcherService {
     candidate: EmployeeMatchCandidate,
     keywords: string[],
     skillIds: number[],
+    requirement?: ParsedRequirement,
+    explicitSkillTokens = false,
   ): RankedEmployeeMatch {
     const reasons: string[] = [];
     let score = 0;
     const matchedSkills: SkillMatchInput[] = [];
+    const categories = requirement?.skillCategories ?? [];
+
+    if (
+      requirement?.requiredStatus &&
+      candidate.status === requirement.requiredStatus
+    ) {
+      score += 8;
+      reasons.push(
+        requirement.requiredStatus === ResourceStatus.BENCH
+          ? 'Currently on bench (required)'
+          : 'Currently allocated (required)',
+      );
+    }
+
+    if (
+      requirement?.requiredUtilizationPct !== undefined &&
+      candidate.availableUtilizationPct >= requirement.requiredUtilizationPct
+    ) {
+      score += 10;
+      reasons.push(
+        `${candidate.availableUtilizationPct}% available (needs ${requirement.requiredUtilizationPct}%)`,
+      );
+    }
 
     for (const skill of candidate.skills) {
       let skillMatched = false;
@@ -45,11 +109,24 @@ export class KeywordMatcherService {
         reasons.push(`Has required skill: ${skill.skillName}`);
       }
 
+      const categoryMatch =
+        categories.length > 0 &&
+        skill.skillCategory &&
+        categories.includes(skill.skillCategory);
+
+      if (categoryMatch && !explicitSkillTokens) {
+        score += 6;
+        skillMatched = true;
+        reasons.push(
+          `Has ${skill.skillCategory} skill: ${skill.skillName} (${skill.proficiency})`,
+        );
+      }
+
       for (const keyword of keywords) {
         if (tokensMatch(skill.skillName, keyword)) {
           score += 5;
           skillMatched = true;
-          reasons.push(`Skill name matches keyword "${keyword}": ${skill.skillName}`);
+          reasons.push(`Skill name matches "${keyword}": ${skill.skillName}`);
         } else if (
           skill.skillCategory &&
           this.keywordMatchesCategory(keyword, skill.skillCategory)
@@ -57,7 +134,21 @@ export class KeywordMatcherService {
           score += 5;
           skillMatched = true;
           reasons.push(
-            `Skill category matches keyword "${keyword}": ${skill.skillName} (${skill.skillCategory})`,
+            `Skill category matches "${keyword}": ${skill.skillName} (${skill.skillCategory})`,
+          );
+        }
+      }
+
+      if (
+        requirement?.minProficiency &&
+        proficiencyMeetsMinimum(skill.proficiency, requirement.minProficiency) &&
+        (categoryMatch || categories.length === 0)
+      ) {
+        score += 4;
+        if (!skillMatched) {
+          skillMatched = true;
+          reasons.push(
+            `Meets minimum proficiency (${requirement.minProficiency}) for ${skill.skillName}`,
           );
         }
       }
@@ -66,9 +157,6 @@ export class KeywordMatcherService {
         const profBonus = this.proficiencyBonus(skill.proficiency);
         if (profBonus > 0) {
           score += profBonus;
-          reasons.push(
-            `${skill.skillName} proficiency ${skill.proficiency} (+${profBonus} score)`,
-          );
         }
         matchedSkills.push({
           skillId: skill.skillId,
@@ -78,12 +166,12 @@ export class KeywordMatcherService {
       }
     }
 
-    if (candidate.status === ResourceStatus.BENCH) {
-      score += 2;
-      reasons.push('Currently on bench (available for allocation)');
-    }
-
-    if (!keywords.length && !skillIds.length) {
+    if (
+      !keywords.length &&
+      !skillIds.length &&
+      !categories.length &&
+      !requirement?.requiredStatus
+    ) {
       reasons.push('Listed as your direct report (no search filter applied)');
     }
 
@@ -96,7 +184,7 @@ export class KeywordMatcherService {
       status: candidate.status,
       department: candidate.department,
       score,
-      reasons: uniqueReasons,
+      reasons: uniqueReasons.length ? uniqueReasons : ['Matches parsed requirement'],
       matchedSkills,
     };
   }

@@ -27,7 +27,7 @@ export class ManagerAssistantController {
 
   @Post('risk-summary')
   @ApiOperation({
-    summary: 'Template risk summary for project (pre-LLM; uses rule flags)',
+    summary: 'AI risk summary for project (LLM with rule-based fallback)',
   })
   riskSummary(
     @CurrentUser() user: JwtAccessPayload,

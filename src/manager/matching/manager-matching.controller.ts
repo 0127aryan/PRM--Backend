@@ -15,7 +15,7 @@ export class ManagerMatchingController {
 
   @Post('search')
   @ApiOperation({
-    summary: 'Keyword/skill search (scored matches + template reasons) for allocate',
+    summary: 'AI or keyword skill search (ranked matches + reasons) for allocate',
   })
   search(
     @CurrentUser() user: JwtAccessPayload,

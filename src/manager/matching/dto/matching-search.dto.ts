@@ -8,6 +8,14 @@ export class MatchingSearchDto {
   @Min(1)
   projectId?: number;
 
+  @ApiPropertyOptional({
+    description: 'Natural language requirement (processed by LLM when enabled)',
+    example: 'Backend developer with Java and microservices, available from June',
+  })
+  @IsOptional()
+  @IsString()
+  query?: string;
+
   @ApiPropertyOptional({ example: ['nestjs', 'react'] })
   @IsOptional()
   @IsArray()

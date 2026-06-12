@@ -7,11 +7,13 @@ export interface RiskFlag {
   milestoneId?: number;
 }
 
+export type RiskSummaryMode = 'keyword' | 'llm';
+
 export interface RiskSummaryResult {
   projectId: number;
   projectName: string;
   health: ProjectHealth;
-  mode: 'keyword';
+  mode: RiskSummaryMode;
   summary: string;
   flags: RiskFlag[];
   recommendations: string[];

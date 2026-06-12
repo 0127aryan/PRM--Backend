@@ -14,6 +14,7 @@ export interface EmployeeMatchCandidate {
   status: ResourceStatus;
   department: string;
   skills: SkillMatchInput[];
+  availableUtilizationPct: number;
 }
 
 export interface RankedEmployeeMatch {

@@ -8,6 +8,13 @@ export class AssistantSkillMatchDto {
   @Min(1)
   projectId?: number;
 
+  @ApiPropertyOptional({
+    description: 'Natural language requirement (processed by LLM when enabled)',
+  })
+  @IsOptional()
+  @IsString()
+  query?: string;
+
   @ApiPropertyOptional({ example: ['nestjs', 'react'] })
   @IsOptional()
   @IsArray()

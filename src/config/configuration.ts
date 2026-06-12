@@ -49,3 +49,10 @@ export const swaggerConfiguration = registerAs('swagger', () => ({
   version: process.env[Env.SWAGGER_VERSION],
   path: process.env[Env.SWAGGER_PATH],
 }));
+
+export const llmConfiguration = registerAs('llm', () => ({
+  host: process.env[Env.LLM_HOST],
+  apiKey: process.env[Env.LLM_API_KEY],
+  model: process.env[Env.LLM_MODEL],
+  provider: process.env[Env.LLM_PROVIDER],
+}));

@@ -23,6 +23,7 @@ export class AdminSettingsService {
     for (const [configKey, configValue] of Object.entries(values)) {
       const key = configKey.trim();
       if (!key) continue;
+      if (key === 'llm_api_key' && !String(configValue).trim()) continue;
       const existing = await this.config.findOne({ where: { configKey: key } });
       if (existing) {
         existing.configValue = String(configValue);

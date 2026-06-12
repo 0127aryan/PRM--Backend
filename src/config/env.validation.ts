@@ -160,6 +160,22 @@ export class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   SWAGGER_PATH!: string;
+
+  @IsString()
+  @IsOptional()
+  LLM_HOST?: string;
+
+  @IsString()
+  @IsOptional()
+  LLM_API_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  LLM_MODEL?: string;
+
+  @IsString()
+  @IsOptional()
+  LLM_PROVIDER?: string;
 }
 
 export function validateEnv(config: Record<string, unknown>): EnvironmentVariables {

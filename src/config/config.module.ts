@@ -4,6 +4,7 @@ import {
   appConfiguration,
   authConfiguration,
   databaseConfiguration,
+  llmConfiguration,
   schedulerConfiguration,
   swaggerConfiguration,
 } from './configuration';
@@ -21,6 +22,7 @@ import { validateEnv } from './env.validation';
         authConfiguration,
         schedulerConfiguration,
         swaggerConfiguration,
+        llmConfiguration,
       ],
     }),
   ],

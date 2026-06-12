@@ -19,7 +19,7 @@ export function buildTypeOrmOptions(
   migrationsDir: string,
 ): DataSourceOptions {
   const migrationsTable = env.DB_MIGRATIONS_TABLE ?? 'typeorm_migrations';
-  const logging = env.TYPEORM_LOGGING === 'true' || env.TYPEORM_LOGGING === true;
+  const logging = false;
   const ssl =
     env.DB_SSL === 'true' || env.DB_SSL === true
       ? { rejectUnauthorized: false }

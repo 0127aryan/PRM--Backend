@@ -11,6 +11,7 @@ import { TimesheetEntry } from '../database/entities/timesheet-entry.entity';
 import { TimesheetEntryTag } from '../database/entities/timesheet-entry-tag.entity';
 import { TimesheetWeek } from '../database/entities/timesheet-week.entity';
 import { DatabaseModule } from '../database/database.module';
+import { LlmModule } from '../llm/llm.module';
 import { MatchingModule } from '../matching/matching.module';
 import { ManagerAssistantController } from './assistant/manager-assistant.controller';
 import { ManagerAssistantService } from './assistant/manager-assistant.service';
@@ -31,6 +32,7 @@ import { ManagerTimesheetsService } from './timesheets/manager-timesheets.servic
 @Module({
   imports: [
     DatabaseModule,
+    LlmModule,
     MatchingModule,
     TypeOrmModule.forFeature([
       User,
