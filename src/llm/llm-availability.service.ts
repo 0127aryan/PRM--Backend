@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { LlmConfigService } from './llm-config.service';
 
-const UNAVAILABLE_TTL_MS = 5 * 60 * 1000;
-const PING_TIMEOUT_MS = 5_000;
+const UNAVAILABLE_TTL_MS = 5 * 1000; // 5 seconds instead of 5 minutes
+const PING_TIMEOUT_MS = 15_000; // 15 seconds instead of 5 seconds
+
 
 @Injectable()
 export class LlmAvailabilityService {

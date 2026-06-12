@@ -15,6 +15,8 @@ import { LlmModule } from '../llm/llm.module';
 import { MatchingModule } from '../matching/matching.module';
 import { ManagerAssistantController } from './assistant/manager-assistant.controller';
 import { ManagerAssistantService } from './assistant/manager-assistant.service';
+import { ManagerTeamBuilderController } from './team-builder/manager-team-builder.controller';
+import { ManagerTeamBuilderService } from './team-builder/manager-team-builder.service';
 import { ManagerAllocationsController } from './allocations/manager-allocations.controller';
 import { ManagerAllocationsService } from './allocations/manager-allocations.service';
 import { ManagerDashboardController } from './dashboard/manager-dashboard.controller';
@@ -55,6 +57,7 @@ import { ManagerTimesheetsService } from './timesheets/manager-timesheets.servic
     ManagerTimesheetsController,
     ManagerMatchingController,
     ManagerAssistantController,
+    ManagerTeamBuilderController,
   ],
   providers: [
     ManagerContextService,
@@ -65,6 +68,8 @@ import { ManagerTimesheetsService } from './timesheets/manager-timesheets.servic
     ManagerTimesheetsService,
     ManagerMatchingService,
     ManagerAssistantService,
+    ManagerTeamBuilderService,
   ],
 })
 export class ManagerModule {}
+

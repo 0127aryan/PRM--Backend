@@ -66,7 +66,7 @@ export class LlmClientService {
         method: 'POST',
         headers: this.authHeaders(config.provider, config.apiKey),
         body: JSON.stringify(body),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(90_000),
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'fetch failed';
@@ -115,7 +115,7 @@ export class LlmClientService {
         method: 'POST',
         headers: this.authHeaders(config.provider, config.apiKey),
         body: JSON.stringify(body),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(90_000),
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'fetch failed';

@@ -73,7 +73,9 @@ export class RiskSummaryService {
 
     const parts: string[] = [`Overall health: ${health}.`];
     if (flags.length > 0) {
-      parts.push(`Active flags (${flags.length}): ${flags.map((f) => f.message).join('; ')}.`);
+      parts.push(
+        `Active flags (${flags.length}): ${flags.map((f) => f.message).join('; ')}.`,
+      );
     }
     return parts.join(' ');
   }
