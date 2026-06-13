@@ -16,6 +16,9 @@ import {
 import type { IRefreshTokenRepository } from '../../database/repositories/interfaces/refresh-token.repository.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 
+import { MailService } from '../../mail/mail.service';
+import { NotificationsService } from '../../notifications/notifications.service';
+
 export interface AdminUserListItem {
   id: number;
   username: string;
@@ -41,7 +44,36 @@ export class AdminUsersService {
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokens: IRefreshTokenRepository,
     private readonly auth: AuthService,
+    private readonly mailService: MailService,
+    private readonly notificationsService: NotificationsService,
   ) {}
+
+  async unfreeze(userId: number) {
+    const user = await this.users.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (user.accountStatus !== AccountStatus.FROZEN) {
+      throw new BadRequestException('User account is not frozen');
+    }
+    await this.users.updateAccountStatus(userId, AccountStatus.ACTIVE);
+
+    // Create DB Notification for Employee
+    await this.notificationsService.createNotification(
+      userId,
+      'Account Unfrozen',
+      'Your account has been unfrozen. Please submit all backlog timesheets immediately.',
+      'ACCOUNT_UNFROZEN',
+    );
+
+    // Send Email
+    await this.mailService.sendUnfreezeEmail(
+      user.email,
+      user.fullName || user.username,
+    );
+
+    return { message: 'User account unfrozen' };
+  }
 
   async list(): Promise<AdminUserListItem[]> {
     const rows = await this.users.findAll();

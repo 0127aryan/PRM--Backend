@@ -8,6 +8,7 @@ export enum AccountStatus {
   PENDING_PASSWORD = 'PENDING_PASSWORD',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
+  FROZEN = 'FROZEN',
 }
 
 export enum ResourceStatus {

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -23,5 +23,13 @@ export class ManagerEmployeesController {
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.service.findDirectReport(user, id);
+  }
+
+  @Post(':id/unfreeze')
+  unfreeze(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.service.unfreeze(user, id);
   }
 }

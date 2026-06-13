@@ -7,7 +7,11 @@ import { Milestone } from '../database/entities/milestone.entity';
 import { Project } from '../database/entities/project.entity';
 import { TimesheetEntry } from '../database/entities/timesheet-entry.entity';
 import { TimesheetWeek } from '../database/entities/timesheet-week.entity';
+import { User } from '../database/entities/user.entity';
+import { RefreshToken } from '../database/entities/refresh-token.entity';
 import { DatabaseModule } from '../database/database.module';
+import { MatchingModule } from '../matching/matching.module';
+import { LlmModule } from '../llm/llm.module';
 import { SchedulerBootstrap } from './scheduler.bootstrap';
 import { SchedulerController } from './scheduler.controller';
 import { SchedulerService } from './scheduler.service';
@@ -16,6 +20,8 @@ import { SchedulerService } from './scheduler.service';
   imports: [
     ScheduleModule.forRoot(),
     DatabaseModule,
+    MatchingModule,
+    LlmModule,
     TypeOrmModule.forFeature([
       Resource,
       Allocation,
@@ -23,6 +29,8 @@ import { SchedulerService } from './scheduler.service';
       TimesheetEntry,
       Project,
       Milestone,
+      User,
+      RefreshToken,
     ]),
   ],
   controllers: [SchedulerController],

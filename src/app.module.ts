@@ -8,6 +8,8 @@ import { CommonModule } from './common/common.module';
 import { AppConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
+import { MailModule } from './mail/mail.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import { HealthModule } from './health/health.module';
     EmployeeModule,
     SchedulerModule,
     HealthModule,
+    MailModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}
+

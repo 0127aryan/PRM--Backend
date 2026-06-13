@@ -296,6 +296,11 @@ export class AuthService {
     if (!user.isActive || user.accountStatus === AccountStatus.INACTIVE) {
       throw new UnauthorizedException('Account is inactive');
     }
+    if (user.accountStatus === AccountStatus.FROZEN) {
+      throw new UnauthorizedException(
+        'Your account is frozen due to consecutive missed timesheets. Please contact your manager or administrator.',
+      );
+    }
   }
 
   private toAuthUser(user: User): AuthUserResponse {

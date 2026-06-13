@@ -2,13 +2,18 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtAccessPayload } from '../../auth/interfaces/jwt-payload.interface';
 import { Allocation } from '../../database/entities/allocation.entity';
 import { Resource } from '../../database/entities/resource.entity';
+import { User } from '../../database/entities/user.entity';
+import { AccountStatus } from '../../database/enums';
 import { ManagerContextService } from '../manager-context.service';
+import { MailService } from '../../mail/mail.service';
+import { NotificationsService } from '../../notifications/notifications.service';
 
 @Injectable()
 export class ManagerEmployeesService {
@@ -18,6 +23,10 @@ export class ManagerEmployeesService {
     private readonly resources: Repository<Resource>,
     @InjectRepository(Allocation)
     private readonly allocations: Repository<Allocation>,
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
+    private readonly mailService: MailService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async listDirectReports(user: JwtAccessPayload) {
@@ -72,6 +81,36 @@ export class ManagerEmployeesService {
     return resource;
   }
 
+  async unfreeze(user: JwtAccessPayload, employeeId: number) {
+    const resource = await this.getDirectReport(user, employeeId);
+    const employeeUser = resource.user;
+    if (!employeeUser) {
+      throw new NotFoundException('User profile not found for this employee');
+    }
+    if (employeeUser.accountStatus !== AccountStatus.FROZEN) {
+      throw new BadRequestException('Employee account is not frozen');
+    }
+    
+    employeeUser.accountStatus = AccountStatus.ACTIVE;
+    await this.users.save(employeeUser);
+
+    // Create DB Notification for Employee
+    await this.notificationsService.createNotification(
+      employeeUser.id,
+      'Account Unfrozen',
+      `Your account has been unfrozen by your manager. Please submit all backlog timesheets immediately.`,
+      'ACCOUNT_UNFROZEN',
+    );
+
+    // Send Unfreeze Email
+    await this.mailService.sendUnfreezeEmail(
+      employeeUser.email,
+      employeeUser.fullName || employeeUser.username,
+    );
+
+    return { message: 'Employee account unfrozen' };
+  }
+
   private async toEmployeeCard(resource: Resource) {
     const activeAllocation = await this.allocations.findOne({
       where: { resourceId: resource.id, isActive: true },
@@ -87,6 +126,7 @@ export class ManagerEmployeesService {
       department: profile?.department,
       designation: profile?.designation,
       status: resource.status,
+      accountStatus: profile?.accountStatus ?? null,
       currentProjectId: activeAllocation?.projectId ?? null,
       currentProjectName: activeAllocation?.project?.name ?? null,
       skillCount: resource.resourceSkills?.length ?? 0,

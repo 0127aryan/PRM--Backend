@@ -65,4 +65,11 @@ export class AdminUsersController {
   reactivate(@Param('id', ParseIntPipe) id: number) {
     return this.service.reactivate(id);
   }
+
+  @Post(':id/unfreeze')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Unfreeze a user account' })
+  unfreeze(@Param('id', ParseIntPipe) id: number) {
+    return this.service.unfreeze(id);
+  }
 }

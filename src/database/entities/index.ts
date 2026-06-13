@@ -1,6 +1,7 @@
 import { ActivityTag } from './activity-tag.entity';
 import { Allocation } from './allocation.entity';
 import { Milestone } from './milestone.entity';
+import { Notification } from './notification.entity';
 import { PasswordSetupToken } from './password-setup-token.entity';
 import { Project } from './project.entity';
 import { RefreshToken } from './refresh-token.entity';
@@ -28,12 +29,14 @@ export const entities = [
   SystemConfig,
   RefreshToken,
   PasswordSetupToken,
+  Notification,
 ];
 
 export {
   ActivityTag,
   Allocation,
   Milestone,
+  Notification,
   PasswordSetupToken,
   Project,
   RefreshToken,
@@ -46,3 +49,4 @@ export {
   TimesheetWeek,
   User,
 };
+
