@@ -90,7 +90,7 @@ export class ManagerEmployeesService {
     if (employeeUser.accountStatus !== AccountStatus.FROZEN) {
       throw new BadRequestException('Employee account is not frozen');
     }
-    
+
     employeeUser.accountStatus = AccountStatus.ACTIVE;
     await this.users.save(employeeUser);
 

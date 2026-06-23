@@ -8,8 +8,10 @@ describe('extractQueryKeywords', () => {
     );
     expect(keywords).toContain('java');
     expect(keywords).toContain('microservices');
-    expect(parseRequirement(
-      'Backend developer with Java and microservices, 6 months',
-    ).skillCategories).toContain('BACKEND');
+    expect(
+      parseRequirement(
+        'Backend developer with Java and microservices, 6 months',
+      ).skillCategories,
+    ).toContain('BACKEND');
   });
 });

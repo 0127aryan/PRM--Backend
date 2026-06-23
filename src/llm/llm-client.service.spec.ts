@@ -18,7 +18,9 @@ describe('LlmClientService', () => {
 
   it('throws when LLM is not configured', async () => {
     (llmConfig.resolve as jest.Mock).mockResolvedValue(null);
-    await expect(service.complete('hello')).rejects.toThrow('LLM is not configured');
+    await expect(service.complete('hello')).rejects.toThrow(
+      'LLM is not configured',
+    );
   });
 
   it('parses OpenAI-compatible chat completion response', async () => {
@@ -89,6 +91,8 @@ describe('LlmClientService', () => {
       text: async () => 'Unauthorized',
     }) as unknown as typeof fetch;
 
-    await expect(service.complete('hello')).rejects.toThrow('LLM request failed');
+    await expect(service.complete('hello')).rejects.toThrow(
+      'LLM request failed',
+    );
   });
 });

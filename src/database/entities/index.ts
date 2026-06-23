@@ -49,4 +49,3 @@ export {
   TimesheetWeek,
   User,
 };
-

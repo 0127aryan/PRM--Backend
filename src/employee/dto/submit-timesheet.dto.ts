@@ -21,7 +21,10 @@ export class TimesheetEntryTagDto {
   @Min(1)
   activityTagId?: number;
 
-  @ApiProperty({ required: false, description: 'Required when using the Other tag (2–40 chars)' })
+  @ApiProperty({
+    required: false,
+    description: 'Required when using the Other tag (2–40 chars)',
+  })
   @IsOptional()
   @IsString()
   @MinLength(2)

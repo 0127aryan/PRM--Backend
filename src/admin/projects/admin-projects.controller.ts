@@ -38,10 +38,7 @@ export class AdminProjectsController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateProjectDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProjectDto) {
     return this.service.update(id, dto);
   }
 

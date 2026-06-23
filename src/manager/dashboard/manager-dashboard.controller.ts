@@ -13,7 +13,9 @@ export class ManagerDashboardController {
   constructor(private readonly service: ManagerDashboardService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Manager dashboard: projects, direct reports, bench preview' })
+  @ApiOperation({
+    summary: 'Manager dashboard: projects, direct reports, bench preview',
+  })
   getDashboard(@CurrentUser() user: JwtAccessPayload) {
     return this.service.getDashboard(user);
   }

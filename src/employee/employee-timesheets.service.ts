@@ -56,7 +56,9 @@ export class EmployeeTimesheetsService {
     const weekEnd = weekEndFromStart(dto.weekStart);
     const today = new Date().toISOString().slice(0, 10);
     if (dto.weekStart > today) {
-      throw new BadRequestException('Cannot submit timesheet for a future week');
+      throw new BadRequestException(
+        'Cannot submit timesheet for a future week',
+      );
     }
 
     const existing = await this.weeks.findOne({
@@ -175,7 +177,9 @@ export class EmployeeTimesheetsService {
       try {
         assertMondayWeekStart(weekStart);
       } catch {
-        throw new BadRequestException('weekStart must be a Monday (YYYY-MM-DD)');
+        throw new BadRequestException(
+          'weekStart must be a Monday (YYYY-MM-DD)',
+        );
       }
       const week = await this.weeks.findOne({
         where: { resourceId: resource.id, weekStart },
@@ -320,7 +324,9 @@ export class EmployeeTimesheetsService {
       if (hasId) {
         const meta = tagById.get(tag.activityTagId!);
         if (!meta) {
-          throw new BadRequestException(`Invalid activity tag ${tag.activityTagId}`);
+          throw new BadRequestException(
+            `Invalid activity tag ${tag.activityTagId}`,
+          );
         }
         if (meta.name.toLowerCase() === 'other' && !hasOther) {
           throw new BadRequestException(

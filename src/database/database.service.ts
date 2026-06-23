@@ -16,15 +16,18 @@ export class DatabaseService {
     const migrationsTable = this.config.getOrThrow<string>(
       Env.DB_MIGRATIONS_TABLE,
     );
-    const tableNames = entities.map((entity) => this.dataSource.getMetadata(entity).tableName);
+    const tableNames = entities.map(
+      (entity) => this.dataSource.getMetadata(entity).tableName,
+    );
 
     let migrationsApplied = 0;
     let migrationsTableExists = false;
 
     try {
-      const rows: Array<{ count: number | string }> = await this.dataSource.query(
-        `SELECT COUNT(*) AS count FROM ${this.quoteIdentifier(migrationsTable)}`,
-      );
+      const rows: Array<{ count: number | string }> =
+        await this.dataSource.query(
+          `SELECT COUNT(*) AS count FROM ${this.quoteIdentifier(migrationsTable)}`,
+        );
       migrationsTableExists = true;
       migrationsApplied = Number(rows[0]?.count ?? 0);
     } catch {

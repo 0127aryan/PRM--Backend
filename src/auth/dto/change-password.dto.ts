@@ -3,7 +3,10 @@ import { IsString, MinLength } from 'class-validator';
 import { IsPrmPassword } from '../../common/validation/is-prm-password.decorator';
 
 export class ChangePasswordDto {
-  @ApiProperty({ minLength: 8, description: 'Existing password (any length already stored)' })
+  @ApiProperty({
+    minLength: 8,
+    description: 'Existing password (any length already stored)',
+  })
   @IsString()
   @MinLength(8)
   currentPassword!: string;

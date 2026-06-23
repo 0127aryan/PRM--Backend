@@ -1,9 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { LlmClientService } from '../llm/llm-client.service';
-import {
-  EmployeeMatchCandidate,
-  RankedEmployeeMatch,
-} from './matching.types';
+import { EmployeeMatchCandidate, RankedEmployeeMatch } from './matching.types';
 import { ParsedRequirement } from './parsed-requirement.types';
 import {
   candidateHasRequiredSkillMatch,
@@ -12,7 +9,11 @@ import {
 import { passesRequirementFilters } from './parse-requirement.util';
 
 function skillKeywordsPresent(requirement?: ParsedRequirement): boolean {
-  return hasSkillFilter(requirement, requirement?.keywords ?? [], requirement?.skillIds ?? []);
+  return hasSkillFilter(
+    requirement,
+    requirement?.keywords ?? [],
+    requirement?.skillIds ?? [],
+  );
 }
 
 interface LlmMatchRow {
@@ -46,7 +47,10 @@ export class LlmMatcherService {
     }
 
     const prompt = this.buildPrompt(candidates, trimmed, requirement);
-    const raw = await this.llm.complete(prompt, { jsonMode: true, temperature: 0.1 });
+    const raw = await this.llm.complete(prompt, {
+      jsonMode: true,
+      temperature: 0.1,
+    });
     const parsed = this.parseResponse(raw);
     return this.mergeWithCandidates(candidates, parsed.matches, requirement);
   }
@@ -214,6 +218,8 @@ export class LlmMatcherService {
         };
       })
       .filter((r): r is RankedEmployeeMatch => r !== null)
-      .sort((a, b) => b.score - a.score || a.fullName.localeCompare(b.fullName));
+      .sort(
+        (a, b) => b.score - a.score || a.fullName.localeCompare(b.fullName),
+      );
   }
 }

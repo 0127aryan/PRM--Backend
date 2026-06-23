@@ -41,12 +41,16 @@ export class RiskSummaryService {
         'Monitor upcoming milestone dates and follow up on partial timesheet coverage.',
       );
     } else {
-      recommendations.push('No immediate action required; continue routine check-ins.');
+      recommendations.push(
+        'No immediate action required; continue routine check-ins.',
+      );
     }
 
     for (const flag of input.flags) {
       if (flag.code === 'MILESTONE_OVERDUE') {
-        recommendations.push(`Close or update milestone status for: ${flag.message}`);
+        recommendations.push(
+          `Close or update milestone status for: ${flag.message}`,
+        );
       }
       if (flag.code === 'MILESTONE_DUE_SOON') {
         recommendations.push(`Start work on: ${flag.message}`);

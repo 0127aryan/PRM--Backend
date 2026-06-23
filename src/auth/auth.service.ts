@@ -214,7 +214,9 @@ export class AuthService {
     }
 
     if (dto.currentPassword === dto.newPassword) {
-      throw new BadRequestException('New password must differ from current password');
+      throw new BadRequestException(
+        'New password must differ from current password',
+      );
     }
 
     const passwordHash = await this.tokenHash.hashPassword(dto.newPassword);
@@ -227,7 +229,9 @@ export class AuthService {
   }
 
   /** Admin helper: URL to the set-password page with email prefilled. */
-  async createPasswordSetupLink(userId: number): Promise<PasswordSetupLinkResult> {
+  async createPasswordSetupLink(
+    userId: number,
+  ): Promise<PasswordSetupLinkResult> {
     const user = await this.users.findById(userId);
     if (!user) {
       throw new BadRequestException('User not found');
@@ -252,7 +256,10 @@ export class AuthService {
     return !user.passwordHash;
   }
 
-  private async issueSession(user: User, res: Response): Promise<SessionTokens> {
+  private async issueSession(
+    user: User,
+    res: Response,
+  ): Promise<SessionTokens> {
     const payload = this.buildAccessPayload(user);
     const accessToken = await this.signAccessToken(payload);
     const plainRefresh = this.tokenHash.generatePlainToken();

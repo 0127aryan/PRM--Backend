@@ -64,7 +64,10 @@ export class AuthController {
     summary:
       'First-time password setup with work email (account must be pending password)',
   })
-  setPassword(@Body() dto: SetPasswordDto, @Res({ passthrough: true }) res: Response) {
+  setPassword(
+    @Body() dto: SetPasswordDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     return this.auth.setPassword(dto, res);
   }
 
@@ -85,7 +88,9 @@ export class AuthController {
 
   @Post('change-password')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Change password (required when force_password_change is set)' })
+  @ApiOperation({
+    summary: 'Change password (required when force_password_change is set)',
+  })
   changePassword(
     @CurrentUser() user: JwtAccessPayload,
     @Body() dto: ChangePasswordDto,

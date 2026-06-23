@@ -15,6 +15,9 @@ import { LlmModule } from '../llm/llm.module';
 import { SchedulerBootstrap } from './scheduler.bootstrap';
 import { SchedulerController } from './scheduler.controller';
 import { SchedulerService } from './scheduler.service';
+import { ResourceSyncService } from './resource-sync.service';
+import { TimesheetAuditService } from './timesheet-audit.service';
+import { ProjectHealthService } from './project-health.service';
 
 @Module({
   imports: [
@@ -34,7 +37,13 @@ import { SchedulerService } from './scheduler.service';
     ]),
   ],
   controllers: [SchedulerController],
-  providers: [SchedulerService, SchedulerBootstrap],
+  providers: [
+    SchedulerService,
+    SchedulerBootstrap,
+    ResourceSyncService,
+    TimesheetAuditService,
+    ProjectHealthService,
+  ],
   exports: [SchedulerService],
 })
 export class SchedulerModule {}

@@ -5,27 +5,25 @@ import { SYSTEM_CONFIG_REPOSITORY } from '../database/repositories/repository.to
 import type { ISystemConfigRepository } from '../database/repositories/interfaces/system-config.repository.interface';
 import { LlmProvider, ResolvedLlmConfig } from './llm.types';
 
-const PROVIDER_DEFAULTS: Record<
-  LlmProvider,
-  { host: string; model: string }
-> = {
-  groq: {
-    host: 'https://api.groq.com/openai/v1',
-    model: 'gemma2-9b-it',
-  },
-  gemini: {
-    host: 'https://generativelanguage.googleapis.com/v1beta',
-    model: 'gemini-2.0-flash',
-  },
-  openai: {
-    host: 'https://api.openai.com/v1',
-    model: 'gpt-4o-mini',
-  },
-  ollama: {
-    host: 'http://127.0.0.1:11434',
-    model: 'gemma2:9b',
-  },
-};
+const PROVIDER_DEFAULTS: Record<LlmProvider, { host: string; model: string }> =
+  {
+    groq: {
+      host: 'https://api.groq.com/openai/v1',
+      model: 'gemma2-9b-it',
+    },
+    gemini: {
+      host: 'https://generativelanguage.googleapis.com/v1beta',
+      model: 'gemini-2.0-flash',
+    },
+    openai: {
+      host: 'https://api.openai.com/v1',
+      model: 'gpt-4o-mini',
+    },
+    ollama: {
+      host: 'http://127.0.0.1:11434',
+      model: 'gemma2:9b',
+    },
+  };
 
 @Injectable()
 export class LlmConfigService {
@@ -66,7 +64,10 @@ export class LlmConfigService {
     return (await this.resolve()) !== null;
   }
 
-  private resolveProvider(explicit: string | undefined, host: string): LlmProvider {
+  private resolveProvider(
+    explicit: string | undefined,
+    host: string,
+  ): LlmProvider {
     const normalized = explicit?.trim().toLowerCase();
     if (normalized === 'gemini') return 'gemini';
     if (normalized === 'openai') return 'openai';

@@ -19,7 +19,9 @@ export class AdminSettingsService {
     return Object.fromEntries(rows.map((r) => [r.configKey, r.configValue]));
   }
 
-  async patchConfig(values: Record<string, string>): Promise<Record<string, string>> {
+  async patchConfig(
+    values: Record<string, string>,
+  ): Promise<Record<string, string>> {
     for (const [configKey, configValue] of Object.entries(values)) {
       const key = configKey.trim();
       if (!key) continue;
@@ -29,7 +31,12 @@ export class AdminSettingsService {
         existing.configValue = String(configValue);
         await this.config.save(existing);
       } else {
-        await this.config.save(this.config.create({ configKey: key, configValue: String(configValue) }));
+        await this.config.save(
+          this.config.create({
+            configKey: key,
+            configValue: String(configValue),
+          }),
+        );
       }
     }
     return this.getConfig();

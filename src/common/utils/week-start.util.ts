@@ -37,7 +37,10 @@ export function lastCompletedWeekMonday(todayStr: string): string {
   return monday;
 }
 
-export function recentMondayWeekStarts(count: number, throughDate = new Date()): string[] {
+export function recentMondayWeekStarts(
+  count: number,
+  throughDate = new Date(),
+): string[] {
   const today = throughDate.toISOString().slice(0, 10);
   let monday = mondayOnOrBefore(today);
   const results: string[] = [];

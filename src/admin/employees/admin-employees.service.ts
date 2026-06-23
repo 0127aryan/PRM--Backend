@@ -55,13 +55,17 @@ export class AdminEmployeesService {
       throw new NotFoundException('User not found');
     }
     if (user.role === UserRole.ADMIN) {
-      throw new BadRequestException('Admin users do not have employee profiles');
+      throw new BadRequestException(
+        'Admin users do not have employee profiles',
+      );
     }
     if (user.employeeCode) {
       throw new ConflictException('Profile already exists for this user');
     }
     if (
-      await this.users.findOne({ where: { employeeCode: dto.employeeCode.trim() } })
+      await this.users.findOne({
+        where: { employeeCode: dto.employeeCode.trim() },
+      })
     ) {
       throw new ConflictException('Employee code already in use');
     }
@@ -99,7 +103,9 @@ export class AdminEmployeesService {
 
     if (dto.reportingManagerId !== undefined) {
       if (user.role === UserRole.MANAGER) {
-        throw new BadRequestException('Managers cannot have a reporting manager');
+        throw new BadRequestException(
+          'Managers cannot have a reporting manager',
+        );
       }
       if (!resource) {
         throw new BadRequestException('Resource profile not found');
@@ -113,7 +119,8 @@ export class AdminEmployeesService {
 
     if (dto.fullName !== undefined) user.fullName = dto.fullName.trim();
     if (dto.department !== undefined) user.department = dto.department.trim();
-    if (dto.designation !== undefined) user.designation = dto.designation.trim();
+    if (dto.designation !== undefined)
+      user.designation = dto.designation.trim();
     await this.users.save(user);
 
     return this.findOne(id);
@@ -175,13 +182,17 @@ export class AdminEmployeesService {
     reportingManagerId: number | undefined,
   ): Promise<number> {
     if (!reportingManagerId) {
-      throw new BadRequestException('reportingManagerId is required for employees');
+      throw new BadRequestException(
+        'reportingManagerId is required for employees',
+      );
     }
     const manager = await this.users.findOne({
       where: { id: reportingManagerId, role: UserRole.MANAGER, isActive: true },
     });
     if (!manager?.employeeCode) {
-      throw new BadRequestException('reportingManagerId must be an active manager');
+      throw new BadRequestException(
+        'reportingManagerId must be an active manager',
+      );
     }
     return manager.id;
   }
@@ -222,7 +233,9 @@ export class AdminEmployeesService {
       reportingManagerId: resource?.reportingManagerId ?? null,
       reportingManagerName: resource?.reportingManager?.fullName ?? null,
       status: resource?.status ?? null,
-      isActive: isEmployee ? Boolean(resource?.isActive) : Boolean(user.isActive),
+      isActive: isEmployee
+        ? Boolean(resource?.isActive)
+        : Boolean(user.isActive),
       userRole: user.role,
       skills: (resource?.resourceSkills ?? []).map((rs) => ({
         skillId: rs.skillId,

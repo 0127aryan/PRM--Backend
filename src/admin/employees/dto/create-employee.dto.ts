@@ -54,7 +54,9 @@ export class CreateEmployeeDto {
   @MaxLength(128)
   designation!: string;
 
-  @ApiPropertyOptional({ description: 'Manager users.id — required for EMPLOYEE role users' })
+  @ApiPropertyOptional({
+    description: 'Manager users.id — required for EMPLOYEE role users',
+  })
   @IsOptional()
   @IsInt()
   @Min(1)

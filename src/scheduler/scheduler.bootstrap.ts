@@ -31,7 +31,10 @@ export class SchedulerBootstrap implements OnModuleInit, OnModuleDestroy {
     const cronExpression = this.config.getOrThrow<string>(Env.SCHEDULER_CRON);
     const job = new CronJob(cronExpression, () => {
       void this.scheduler.run().catch((err) => {
-        this.logger.error('Scheduled run failed', err instanceof Error ? err.stack : err);
+        this.logger.error(
+          'Scheduled run failed',
+          err instanceof Error ? err.stack : err,
+        );
       });
     });
 

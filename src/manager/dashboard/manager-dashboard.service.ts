@@ -54,9 +54,11 @@ export class ManagerDashboardService {
       },
       directReports: {
         total: directReports.length,
-        bench: directReports.filter((e) => e.status === ResourceStatus.BENCH).length,
-        allocated: directReports.filter((e) => e.status === ResourceStatus.ALLOCATED)
+        bench: directReports.filter((e) => e.status === ResourceStatus.BENCH)
           .length,
+        allocated: directReports.filter(
+          (e) => e.status === ResourceStatus.ALLOCATED,
+        ).length,
         items: directReports,
       },
       companyBenchPreview: benchCompanyWide.map((r) => ({

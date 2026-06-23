@@ -50,14 +50,18 @@ export class EmployeeController {
   }
 
   @Get('timesheets/reminders')
-  @ApiOperation({ summary: 'Missed or not submitted weeks (last 8 past weeks)' })
+  @ApiOperation({
+    summary: 'Missed or not submitted weeks (last 8 past weeks)',
+  })
   missedReminders(@CurrentUser() user: JwtAccessPayload) {
     return this.timesheets.missedReminders(user);
   }
 
   @Post('timesheets')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Submit weekly timesheet (Monday weekStart, whole hours)' })
+  @ApiOperation({
+    summary: 'Submit weekly timesheet (Monday weekStart, whole hours)',
+  })
   submitTimesheet(
     @CurrentUser() user: JwtAccessPayload,
     @Body() dto: SubmitTimesheetDto,

@@ -43,7 +43,9 @@ export class ManagerProjectsController {
   }
 
   @Patch(':id/status')
-  @ApiOperation({ summary: 'Update project status (manager-owned projects only)' })
+  @ApiOperation({
+    summary: 'Update project status (manager-owned projects only)',
+  })
   updateStatus(
     @CurrentUser() user: JwtAccessPayload,
     @Param('id', ParseIntPipe) id: number,

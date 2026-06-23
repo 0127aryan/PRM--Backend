@@ -20,7 +20,9 @@ export class UpdateEmployeeDto {
   @MaxLength(128)
   designation?: string;
 
-  @ApiPropertyOptional({ description: 'Assign reporting manager (employees.id)' })
+  @ApiPropertyOptional({
+    description: 'Assign reporting manager (employees.id)',
+  })
   @IsOptional()
   @IsInt()
   @Min(1)

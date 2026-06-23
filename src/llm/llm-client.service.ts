@@ -12,10 +12,15 @@ export class LlmClientService {
     private readonly availability: LlmAvailabilityService,
   ) {}
 
-  async complete(prompt: string, options: LlmChatOptions = {}): Promise<string> {
+  async complete(
+    prompt: string,
+    options: LlmChatOptions = {},
+  ): Promise<string> {
     const config = await this.llmConfig.resolve();
     if (!config) {
-      throw new Error('LLM is not configured (set LLM_HOST and LLM_API_KEY in .env)');
+      throw new Error(
+        'LLM is not configured (set LLM_HOST and LLM_API_KEY in .env)',
+      );
     }
 
     if (config.provider === 'gemini') {
@@ -33,7 +38,9 @@ export class LlmClientService {
     provider: ResolvedLlmConfig['provider'],
     apiKey: string,
   ): Record<string, string> {
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
     if (!apiKey) return headers;
 
     if (provider === 'ollama') {
@@ -76,7 +83,9 @@ export class LlmClientService {
 
     if (!response.ok) {
       const detail = await response.text();
-      this.logger.warn(`LLM request failed (${response.status}): ${detail.slice(0, 300)}`);
+      this.logger.warn(
+        `LLM request failed (${response.status}): ${detail.slice(0, 300)}`,
+      );
       this.availability.markUnavailable(`status ${response.status}`);
       throw new Error(`LLM request failed with status ${response.status}`);
     }
@@ -125,7 +134,9 @@ export class LlmClientService {
 
     if (!response.ok) {
       const detail = await response.text();
-      this.logger.warn(`Ollama request failed (${response.status}): ${detail.slice(0, 300)}`);
+      this.logger.warn(
+        `Ollama request failed (${response.status}): ${detail.slice(0, 300)}`,
+      );
       this.availability.markUnavailable(`status ${response.status}`);
       throw new Error(`LLM request failed with status ${response.status}`);
     }
@@ -151,14 +162,18 @@ export class LlmClientService {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
           temperature: options.temperature ?? 0.2,
-          responseMimeType: options.jsonMode ? 'application/json' : 'text/plain',
+          responseMimeType: options.jsonMode
+            ? 'application/json'
+            : 'text/plain',
         },
       }),
     });
 
     if (!response.ok) {
       const detail = await response.text();
-      this.logger.warn(`Gemini request failed (${response.status}): ${detail.slice(0, 300)}`);
+      this.logger.warn(
+        `Gemini request failed (${response.status}): ${detail.slice(0, 300)}`,
+      );
       throw new Error(`LLM request failed with status ${response.status}`);
     }
 

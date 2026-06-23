@@ -18,7 +18,6 @@ export interface LlmTeamMember {
   matchReason: string;
 }
 
-
 export interface LlmTeamOption {
   optionName: string;
   description: string;
@@ -36,7 +35,6 @@ export interface LlmTeamResponse {
   gaps: LlmTeamGap[];
 }
 
-
 @Injectable()
 export class ManagerTeamBuilderService {
   private readonly logger = new Logger(ManagerTeamBuilderService.name);
@@ -49,9 +47,14 @@ export class ManagerTeamBuilderService {
     private readonly resources: Repository<Resource>,
   ) {}
 
-  async buildTeam(user: JwtAccessPayload, dto: BuildTeamDto): Promise<LlmTeamResponse> {
+  async buildTeam(
+    user: JwtAccessPayload,
+    dto: BuildTeamDto,
+  ): Promise<LlmTeamResponse> {
     const llmReady = await this.llmConfig.isConfigured();
-    const llmReachable = llmReady ? await this.llmAvailability.isReachable() : false;
+    const llmReachable = llmReady
+      ? await this.llmAvailability.isReachable()
+      : false;
 
     if (!llmReady || !llmReachable) {
       throw new BadRequestException(
@@ -61,13 +64,21 @@ export class ManagerTeamBuilderService {
 
     const query = dto.query?.trim() ?? '';
     if (!query) {
-      throw new BadRequestException('A description of the team requirements is required.');
+      throw new BadRequestException(
+        'A description of the team requirements is required.',
+      );
     }
 
     // Query ALL active resources from all over the organization
     const activeResources = await this.resources.find({
       where: { isActive: true },
-      relations: ['user', 'resourceSkills', 'resourceSkills.skill', 'allocations', 'allocations.project'],
+      relations: [
+        'user',
+        'resourceSkills',
+        'resourceSkills.skill',
+        'allocations',
+        'allocations.project',
+      ],
     });
 
     const candidates = activeResources.map((r) => {
@@ -98,11 +109,16 @@ export class ManagerTeamBuilderService {
     const prompt = this.buildPrompt(query, candidates);
 
     try {
-      const raw = await this.llm.complete(prompt, { jsonMode: true, temperature: 0.2 });
+      const raw = await this.llm.complete(prompt, {
+        jsonMode: true,
+        temperature: 0.2,
+      });
       const parsed = this.parseResponse(raw);
       return parsed;
     } catch (error) {
-      this.logger.error(`AI team building failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `AI team building failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw new BadRequestException(
         `Failed to generate team options using AI: ${error instanceof Error ? error.message : 'Unknown LLM error'}`,
       );
@@ -168,8 +184,12 @@ export class ManagerTeamBuilderService {
     try {
       parsed = JSON.parse(jsonText);
     } catch (err) {
-      this.logger.error(`Failed to parse LLM raw response. Raw response was: ${raw}`);
-      throw new Error(`LLM response was not valid JSON: ${err instanceof Error ? err.message : String(err)}`);
+      this.logger.error(
+        `Failed to parse LLM raw response. Raw response was: ${raw}`,
+      );
+      throw new Error(
+        `LLM response was not valid JSON: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
 
     const options = Array.isArray(parsed.options) ? parsed.options : [];
@@ -177,7 +197,10 @@ export class ManagerTeamBuilderService {
 
     return {
       options: options.map((opt: any) => ({
-        optionName: typeof opt.optionName === 'string' ? opt.optionName : 'Suggested Team Option',
+        optionName:
+          typeof opt.optionName === 'string'
+            ? opt.optionName
+            : 'Suggested Team Option',
         description: typeof opt.description === 'string' ? opt.description : '',
         members: Array.isArray(opt.members)
           ? opt.members
@@ -186,16 +209,25 @@ export class ManagerTeamBuilderService {
                 resourceId: m.resourceId,
                 fullName: typeof m.fullName === 'string' ? m.fullName : '',
                 role: typeof m.role === 'string' ? m.role : '',
-                skills: Array.isArray(m.skills) ? m.skills.filter((s: any) => typeof s === 'string') : [],
-                availableUtilizationPct: typeof m.availableUtilizationPct === 'number' ? m.availableUtilizationPct : 0,
-                matchReason: typeof m.matchReason === 'string' ? m.matchReason : '',
+                skills: Array.isArray(m.skills)
+                  ? m.skills.filter((s: any) => typeof s === 'string')
+                  : [],
+                availableUtilizationPct:
+                  typeof m.availableUtilizationPct === 'number'
+                    ? m.availableUtilizationPct
+                    : 0,
+                matchReason:
+                  typeof m.matchReason === 'string' ? m.matchReason : '',
               }))
           : [],
       })),
       gaps: gaps.map((g: any) => ({
         role: typeof g.role === 'string' ? g.role : 'Unknown Role',
         reason: typeof g.reason === 'string' ? g.reason : 'Gap identified.',
-        type: g.type === 'NO_SKILL' || g.type === 'ALLOCATED_ELSEWHERE' ? g.type : 'NO_SKILL',
+        type:
+          g.type === 'NO_SKILL' || g.type === 'ALLOCATED_ELSEWHERE'
+            ? g.type
+            : 'NO_SKILL',
       })),
     };
   }
@@ -212,5 +244,4 @@ export class ManagerTeamBuilderService {
     }
     return raw.trim();
   }
-
 }

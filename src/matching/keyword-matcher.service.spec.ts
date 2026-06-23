@@ -32,7 +32,9 @@ describe('KeywordMatcherService', () => {
     const results = matcher.rankMatches([base], ['nestjs'], []);
     expect(results).toHaveLength(1);
     expect(results[0].score).toBeGreaterThan(0);
-    expect(results[0].matchedSkills.some((s) => s.skillName === 'NestJS')).toBe(true);
+    expect(results[0].matchedSkills.some((s) => s.skillName === 'NestJS')).toBe(
+      true,
+    );
     expect(results[0].reasons.some((r) => r.includes('nestjs'))).toBe(true);
   });
 
@@ -70,7 +72,9 @@ describe('KeywordMatcherService', () => {
     };
     const results = matcher.rankMatches([nodeDev], ['backend', 'nodejs'], []);
     expect(results).toHaveLength(1);
-    expect(results[0].matchedSkills.some((s) => s.skillName === 'Node.js')).toBe(true);
+    expect(
+      results[0].matchedSkills.some((s) => s.skillName === 'Node.js'),
+    ).toBe(true);
   });
 
   it('returns all direct reports when no filter', () => {
@@ -155,12 +159,7 @@ describe('KeywordMatcherService', () => {
     };
 
     const parsed = parseRequirement('I need a coldfusion developer');
-    const results = matcher.rankMatches(
-      [nodeDev],
-      parsed.keywords,
-      [],
-      parsed,
-    );
+    const results = matcher.rankMatches([nodeDev], parsed.keywords, [], parsed);
 
     expect(parsed.keywords).toContain('coldfusion');
     expect(results).toHaveLength(0);

@@ -14,7 +14,11 @@ import { Resource } from '../../database/entities/resource.entity';
 import { ManagerContextService } from '../manager-context.service';
 import { CreateAllocationDto } from './dto/create-allocation.dto';
 import { EndAllocationDto } from './dto/end-allocation.dto';
-import { allocationRangesOverlap, maxDateOnly, toDateOnly } from './allocation-date.util';
+import {
+  allocationRangesOverlap,
+  maxDateOnly,
+  toDateOnly,
+} from './allocation-date.util';
 
 @Injectable()
 export class ManagerAllocationsService {
@@ -47,7 +51,9 @@ export class ManagerAllocationsService {
       );
     }
 
-    const project = await this.projects.findOne({ where: { id: dto.projectId } });
+    const project = await this.projects.findOne({
+      where: { id: dto.projectId },
+    });
     if (!project) {
       throw new NotFoundException('Project not found');
     }
@@ -111,7 +117,9 @@ export class ManagerAllocationsService {
 
     const stillActive = await this.allocations
       .createQueryBuilder('a')
-      .where('a.resource_id = :resourceId', { resourceId: allocation.resourceId })
+      .where('a.resource_id = :resourceId', {
+        resourceId: allocation.resourceId,
+      })
       .andWhere('a.is_active = :active', { active: true })
       .getCount();
     if (stillActive === 0 && allocation.resource) {
@@ -119,7 +127,10 @@ export class ManagerAllocationsService {
       await this.resources.save(allocation.resource);
     }
 
-    return { message: 'Allocation ended', allocation: this.toResponse(allocation) };
+    return {
+      message: 'Allocation ended',
+      allocation: this.toResponse(allocation),
+    };
   }
 
   private async assertUtilizationCap(

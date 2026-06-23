@@ -1,7 +1,4 @@
-import {
-  registerDecorator,
-  type ValidationOptions,
-} from 'class-validator';
+import { registerDecorator, type ValidationOptions } from 'class-validator';
 import { isPrmPassword, PRM_PASSWORD_MESSAGE } from './password-policy';
 
 export function IsPrmPassword(validationOptions?: ValidationOptions) {

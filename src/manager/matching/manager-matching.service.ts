@@ -50,7 +50,9 @@ export class ManagerMatchingService {
     const manager = await this.managerContext.requireManagerUser(user);
 
     if (dto.projectId) {
-      const project = await this.projects.findOne({ where: { id: dto.projectId } });
+      const project = await this.projects.findOne({
+        where: { id: dto.projectId },
+      });
       if (!project || project.managerId !== manager.id) {
         throw new ForbiddenException('Project is not managed by you');
       }
@@ -59,7 +61,9 @@ export class ManagerMatchingService {
     const query = dto.query?.trim() ?? '';
     const matchingMode = await this.matchingConfig.getMatchingMode();
     const llmReady = await this.llmConfig.isConfigured();
-    const llmReachable = llmReady ? await this.llmAvailability.isReachable() : false;
+    const llmReachable = llmReady
+      ? await this.llmAvailability.isReachable()
+      : false;
     const useLlmRanking =
       llmReady && llmReachable && matchingMode === 'llm' && query.length > 0;
 
@@ -201,7 +205,9 @@ export class ManagerMatchingService {
     keywordMatches: RankedEmployeeMatch[],
     llmMatches: RankedEmployeeMatch[],
   ): RankedEmployeeMatch[] {
-    const llmById = new Map(llmMatches.map((match) => [match.employeeId, match]));
+    const llmById = new Map(
+      llmMatches.map((match) => [match.employeeId, match]),
+    );
 
     return keywordMatches
       .map((keywordMatch) => {
@@ -214,7 +220,9 @@ export class ManagerMatchingService {
           ...keywordMatch,
           score: llmMatch.score,
           reasons:
-            llmMatch.reasons.length > 0 ? llmMatch.reasons : keywordMatch.reasons,
+            llmMatch.reasons.length > 0
+              ? llmMatch.reasons
+              : keywordMatch.reasons,
           matchedSkills:
             keywordMatch.matchedSkills.length > 0
               ? keywordMatch.matchedSkills
@@ -259,7 +267,9 @@ export class ManagerMatchingService {
       .andWhere('resource.is_active = true');
 
     if (parsed.requiredStatus) {
-      qb.andWhere('resource.status = :status', { status: parsed.requiredStatus });
+      qb.andWhere('resource.status = :status', {
+        status: parsed.requiredStatus,
+      });
     }
 
     if (parsed.requiredUtilizationPct !== undefined) {

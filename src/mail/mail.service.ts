@@ -17,10 +17,13 @@ export class MailService implements OnModuleInit {
     const user = this.config.get<string>('SMTP_USER');
     const pass = this.config.get<string>('SMTP_PASS');
     const fromName = this.config.get<string>('SMTP_FROM_NAME') || 'PRM Admin';
-    const fromEmail = this.config.get<string>('SMTP_FROM_EMAIL') || 'admin@prmtool.local';
+    const fromEmail =
+      this.config.get<string>('SMTP_FROM_EMAIL') || 'admin@prmtool.local';
 
     if (!host || !user || !pass) {
-      this.logger.warn('SMTP environment variables are missing. Creating Ethereal Email sandbox account...');
+      this.logger.warn(
+        'SMTP environment variables are missing. Creating Ethereal Email sandbox account...',
+      );
       try {
         const testAccount = await nodemailer.createTestAccount();
         this.transporter = nodemailer.createTransport({
@@ -34,7 +37,7 @@ export class MailService implements OnModuleInit {
         });
         this.fromEmail = testAccount.user;
         this.fromName = 'PRM System (Sandbox)';
-        
+
         this.logger.log('--------------------------------------------------');
         this.logger.log('🎉 Ethereal SMTP Sandbox Credentials Generated:');
         this.logger.log(`SMTP User:   ${testAccount.user}`);
@@ -53,7 +56,9 @@ export class MailService implements OnModuleInit {
       });
       this.fromEmail = fromEmail;
       this.fromName = fromName;
-      this.logger.log(`SMTP mailer configured successfully (Host: ${host}:${port})`);
+      this.logger.log(
+        `SMTP mailer configured successfully (Host: ${host}:${port})`,
+      );
     }
   }
 
@@ -177,7 +182,12 @@ export class MailService implements OnModuleInit {
     health: string,
     summary: string,
     milestones: Array<{ title: string; dueDate: string; status: string }>,
-    suggestions: Array<{ fullName: string; availableUtilizationPct: number; skills: string[]; reason: string }>,
+    suggestions: Array<{
+      fullName: string;
+      availableUtilizationPct: number;
+      skills: string[];
+      reason: string;
+    }>,
   ) {
     const subject = `⚠️ Alert: Project "${projectName}" is AT_RISK`;
     const html = `
@@ -211,18 +221,26 @@ export class MailService implements OnModuleInit {
 
             <div style="padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
               <h3 style="margin-top: 0; margin-bottom: 12px; font-size: 15px; font-weight: 600; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">📅 Key Milestones</h3>
-              ${!milestones || milestones.length === 0 ? '<p style="margin: 0; font-size: 13px; color: #64748b;">No milestones defined for this project.</p>' : `
+              ${
+                !milestones || milestones.length === 0
+                  ? '<p style="margin: 0; font-size: 13px; color: #64748b;">No milestones defined for this project.</p>'
+                  : `
                 <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #334155;">
-                  ${milestones.map(m => `
+                  ${milestones
+                    .map(
+                      (m) => `
                     <li style="margin-bottom: 6px;">
                       <strong>${m.title}</strong> - Due: ${m.dueDate} 
                       <span style="font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background-color: ${m.status === 'COMPLETED' ? '#dcfce7; color: #15803d;' : m.status === 'IN_PROGRESS' ? '#fef9c3; color: #a16207;' : '#fee2e2; color: #b91c1c;'}; margin-left: 8px;">
                         ${m.status}
                       </span>
                     </li>
-                  `).join('')}
+                  `,
+                    )
+                    .join('')}
                 </ul>
-              `}
+              `
+              }
             </div>
           </div>
 
@@ -235,9 +253,14 @@ export class MailService implements OnModuleInit {
             <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 15px; font-weight: 600; color: #166534;">💡 Suggested Help (Available Talent)</h3>
             <p style="margin: 0 0 12px 0; font-size: 13px; color: #166534;">Below are available resources whose skills can help reduce this project's risk:</p>
             
-            ${!suggestions || suggestions.length === 0 ? '<p style="margin: 0; font-size: 13px; color: #64748b;">No available matching employees found at this time.</p>' : `
+            ${
+              !suggestions || suggestions.length === 0
+                ? '<p style="margin: 0; font-size: 13px; color: #64748b;">No available matching employees found at this time.</p>'
+                : `
               <div style="display: grid; gap: 12px;">
-                ${suggestions.map(s => `
+                ${suggestions
+                  .map(
+                    (s) => `
                   <div style="background-color: #ffffff; padding: 12px; border: 1px solid #dcfce7; border-radius: 6px;">
                     <div style="font-weight: 600; color: #14532d; font-size: 14px;">
                       👤 ${s.fullName} 
@@ -252,9 +275,12 @@ export class MailService implements OnModuleInit {
                       <strong>Fit Reason:</strong> ${s.reason}
                     </div>
                   </div>
-                `).join('')}
+                `,
+                  )
+                  .join('')}
               </div>
-            `}
+            `
+            }
           </div>
 
           <div style="text-align: center; margin-top: 32px;">

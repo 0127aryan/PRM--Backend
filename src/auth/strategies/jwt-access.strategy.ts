@@ -11,7 +11,10 @@ import { Inject } from '@nestjs/common';
 import { JwtAccessPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
-export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access') {
+export class JwtAccessStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-access',
+) {
   constructor(
     config: ConfigService,
     @Inject(USER_REPOSITORY) private readonly users: IUserRepository,

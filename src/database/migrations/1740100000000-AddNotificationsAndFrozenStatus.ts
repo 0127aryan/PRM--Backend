@@ -5,7 +5,9 @@ export class AddNotificationsAndFrozenStatus1740100000000 implements MigrationIn
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // 1. Add 'FROZEN' to the account_status enum type
-    await queryRunner.query(`ALTER TYPE account_status ADD VALUE IF NOT EXISTS 'FROZEN'`);
+    await queryRunner.query(
+      `ALTER TYPE account_status ADD VALUE IF NOT EXISTS 'FROZEN'`,
+    );
 
     // 2. Create notifications table
     await queryRunner.query(`

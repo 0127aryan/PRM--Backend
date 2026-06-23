@@ -16,7 +16,8 @@ export class ManagerAssistantController {
 
   @Post('skill-match')
   @ApiOperation({
-    summary: 'Keyword skill match for allocate page (scored direct reports + reasons)',
+    summary:
+      'Keyword skill match for allocate page (scored direct reports + reasons)',
   })
   skillMatch(
     @CurrentUser() user: JwtAccessPayload,

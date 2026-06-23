@@ -33,7 +33,9 @@ export class AdminUsersController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create user (email only) and return set-password link' })
+  @ApiOperation({
+    summary: 'Create user (email only) and return set-password link',
+  })
   create(@Body() dto: CreateUserDto) {
     return this.service.create(dto);
   }

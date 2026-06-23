@@ -61,7 +61,9 @@ export class KeywordMatcherService {
         ),
       )
       .filter((row) => !skillFilterActive || row.matchedSkills.length > 0)
-      .sort((a, b) => b.score - a.score || a.fullName.localeCompare(b.fullName));
+      .sort(
+        (a, b) => b.score - a.score || a.fullName.localeCompare(b.fullName),
+      );
 
     return ranked;
   }
@@ -141,7 +143,10 @@ export class KeywordMatcherService {
 
       if (
         requirement?.minProficiency &&
-        proficiencyMeetsMinimum(skill.proficiency, requirement.minProficiency) &&
+        proficiencyMeetsMinimum(
+          skill.proficiency,
+          requirement.minProficiency,
+        ) &&
         (categoryMatch || categories.length === 0)
       ) {
         score += 4;
@@ -184,7 +189,9 @@ export class KeywordMatcherService {
       status: candidate.status,
       department: candidate.department,
       score,
-      reasons: uniqueReasons.length ? uniqueReasons : ['Matches parsed requirement'],
+      reasons: uniqueReasons.length
+        ? uniqueReasons
+        : ['Matches parsed requirement'],
       matchedSkills,
     };
   }

@@ -5,9 +5,7 @@ import { PasswordSetupToken } from '../../entities/password-setup-token.entity';
 import { IPasswordSetupTokenRepository } from '../interfaces/password-setup-token.repository.interface';
 
 @Injectable()
-export class TypeOrmPasswordSetupTokenRepository
-  implements IPasswordSetupTokenRepository
-{
+export class TypeOrmPasswordSetupTokenRepository implements IPasswordSetupTokenRepository {
   constructor(
     @InjectRepository(PasswordSetupToken)
     private readonly repo: Repository<PasswordSetupToken>,

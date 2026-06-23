@@ -13,7 +13,8 @@ export class SchedulerController {
   @Post('run')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Run maintenance jobs now (employee status, missed timesheets, project health)',
+    summary:
+      'Run maintenance jobs now (employee status, missed timesheets, project health)',
   })
   run() {
     return this.scheduler.run();

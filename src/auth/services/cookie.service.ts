@@ -16,7 +16,9 @@ export class CookieService {
     this.baseOptions = {
       httpOnly: true,
       secure: config.getOrThrow<boolean>(Env.COOKIE_SECURE),
-      sameSite: config.getOrThrow<'strict' | 'lax' | 'none'>(Env.COOKIE_SAME_SITE),
+      sameSite: config.getOrThrow<'strict' | 'lax' | 'none'>(
+        Env.COOKIE_SAME_SITE,
+      ),
       path: '/',
     };
   }

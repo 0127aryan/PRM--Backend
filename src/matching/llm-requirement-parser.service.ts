@@ -45,7 +45,10 @@ export class LlmRequirementParserService {
         '{"keywords":["string"],"requiredStatus":"BENCH"|null,"minProficiency":"INTERMEDIATE"|null,"skillCategories":["BACKEND"],"requiredUtilizationPct":60|null}',
       ].join('\n');
 
-      const raw = await this.llm.complete(prompt, { jsonMode: true, temperature: 0 });
+      const raw = await this.llm.complete(prompt, {
+        jsonMode: true,
+        temperature: 0,
+      });
       const parsed = this.normalizeLlmJson(raw, fallback);
       return parsed;
     } catch (error) {
@@ -58,7 +61,10 @@ export class LlmRequirementParserService {
     }
   }
 
-  private normalizeLlmJson(raw: string, fallback: ParsedRequirement): ParsedRequirement {
+  private normalizeLlmJson(
+    raw: string,
+    fallback: ParsedRequirement,
+  ): ParsedRequirement {
     const jsonText = raw.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1] ?? raw;
     const start = jsonText.indexOf('{');
     const end = jsonText.lastIndexOf('}');
@@ -71,7 +77,8 @@ export class LlmRequirementParserService {
       return fallback;
     }
 
-    const requiredStatus = this.parseStatus(data.requiredStatus) ?? fallback.requiredStatus;
+    const requiredStatus =
+      this.parseStatus(data.requiredStatus) ?? fallback.requiredStatus;
     const minProficiency =
       this.parseProficiency(data.minProficiency) ?? fallback.minProficiency;
     const skillCategories = [
@@ -85,7 +92,9 @@ export class LlmRequirementParserService {
     const keywords = [
       ...new Set([
         ...fallback.keywords,
-        ...(data.keywords ?? []).map((k) => k.toLowerCase().trim()).filter(Boolean),
+        ...(data.keywords ?? [])
+          .map((k) => k.toLowerCase().trim())
+          .filter(Boolean),
       ]),
     ];
 

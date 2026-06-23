@@ -32,7 +32,9 @@ export interface IUserRepository {
   updateAccountStatus(userId: number, status: AccountStatus): Promise<void>;
 }
 
-export const createAdminDefaults = (input: CreateAdminUserInput): Partial<User> => ({
+export const createAdminDefaults = (
+  input: CreateAdminUserInput,
+): Partial<User> => ({
   username: input.username,
   email: input.email,
   passwordHash: input.passwordHash,
@@ -42,7 +44,9 @@ export const createAdminDefaults = (input: CreateAdminUserInput): Partial<User> 
   forcePasswordChange: false,
 });
 
-export const createAppUserDefaults = (input: CreateAppUserInput): Partial<User> => ({
+export const createAppUserDefaults = (
+  input: CreateAppUserInput,
+): Partial<User> => ({
   username: input.username,
   email: input.email,
   passwordHash: null,

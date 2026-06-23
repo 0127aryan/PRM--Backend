@@ -5,7 +5,10 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { UserRole } from '../../database/enums';
 import type { JwtAccessPayload } from '../../auth/interfaces/jwt-payload.interface';
 import { BuildTeamDto } from './dto/build-team.dto';
-import { ManagerTeamBuilderService, LlmTeamResponse } from './manager-team-builder.service';
+import {
+  ManagerTeamBuilderService,
+  LlmTeamResponse,
+} from './manager-team-builder.service';
 
 @ApiTags('manager/team-builder')
 @Roles(UserRole.MANAGER)
@@ -15,7 +18,8 @@ export class ManagerTeamBuilderController {
 
   @Post()
   @ApiOperation({
-    summary: 'Build team recommendations based on a natural language query using AI',
+    summary:
+      'Build team recommendations based on a natural language query using AI',
   })
   buildTeam(
     @CurrentUser() user: JwtAccessPayload,
@@ -23,6 +27,4 @@ export class ManagerTeamBuilderController {
   ): Promise<any> {
     return this.service.buildTeam(user, dto);
   }
-
 }
-

@@ -10,10 +10,7 @@ export function isMilestoneOverdue(
   milestone: MilestoneRiskInput,
   today: string,
 ): boolean {
-  return (
-    milestone.status !== MilestoneStatus.DONE &&
-    milestone.dueDate < today
-  );
+  return milestone.status !== MilestoneStatus.DONE && milestone.dueDate < today;
 }
 
 export function isMilestoneDueSoon(

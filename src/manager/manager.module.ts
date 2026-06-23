@@ -72,4 +72,3 @@ import { ManagerTimesheetsService } from './timesheets/manager-timesheets.servic
   ],
 })
 export class ManagerModule {}
-

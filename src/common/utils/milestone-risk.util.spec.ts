@@ -1,8 +1,5 @@
 import { MilestoneStatus } from '../../database/enums';
-import {
-  isMilestoneDueSoon,
-  isMilestoneOverdue,
-} from './milestone-risk.util';
+import { isMilestoneDueSoon, isMilestoneOverdue } from './milestone-risk.util';
 
 describe('milestone-risk.util', () => {
   const today = '2026-06-11';

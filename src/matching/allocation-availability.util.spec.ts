@@ -1,4 +1,7 @@
-import { availableUtilizationOnDate, activeUtilizationOnDate } from './allocation-availability.util';
+import {
+  availableUtilizationOnDate,
+  activeUtilizationOnDate,
+} from './allocation-availability.util';
 
 describe('allocation-availability.util', () => {
   it('returns 100% available when there are no active allocations', () => {

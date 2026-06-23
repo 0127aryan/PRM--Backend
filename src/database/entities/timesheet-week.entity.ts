@@ -26,7 +26,12 @@ export class TimesheetWeek {
   @Column({ type: 'enum', enum: TimesheetWeekStatus })
   status!: TimesheetWeekStatus;
 
-  @Column({ name: 'submitted_at', type: 'timestamp', precision: 3, nullable: true })
+  @Column({
+    name: 'submitted_at',
+    type: 'timestamp',
+    precision: 3,
+    nullable: true,
+  })
   submittedAt!: Date | null;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp', precision: 3 })

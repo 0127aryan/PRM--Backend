@@ -78,6 +78,8 @@ export class TypeOrmUserRepository implements IUserRepository {
   }
 
   updateAccountStatus(userId: number, status: AccountStatus): Promise<void> {
-    return this.repo.update(userId, { accountStatus: status }).then(() => undefined);
+    return this.repo
+      .update(userId, { accountStatus: status })
+      .then(() => undefined);
   }
 }

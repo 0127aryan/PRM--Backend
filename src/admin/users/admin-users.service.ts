@@ -105,7 +105,11 @@ export class AdminUsersService {
       throw new ConflictException('Username already taken');
     }
 
-    const user = await this.users.createAppUser({ email, username, role: dto.role });
+    const user = await this.users.createAppUser({
+      email,
+      username,
+      role: dto.role,
+    });
     const link = await this.auth.createPasswordSetupLink(user.id);
 
     const message =
@@ -146,7 +150,8 @@ export class AdminUsersService {
 
     const link = await this.auth.createPasswordSetupLink(userId);
     return {
-      message: 'Password cleared. User can set a new password on the login setup page.',
+      message:
+        'Password cleared. User can set a new password on the login setup page.',
       setupUrl: link.setupUrl,
     };
   }

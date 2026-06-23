@@ -24,13 +24,24 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true })
   email!: string;
 
-  @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })
+  @Column({
+    name: 'password_hash',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
   passwordHash!: string | null;
 
   @Column({ type: 'enum', enum: UserRole })
   role!: UserRole;
 
-  @Column({ name: 'employee_code', type: 'varchar', length: 32, unique: true, nullable: true })
+  @Column({
+    name: 'employee_code',
+    type: 'varchar',
+    length: 32,
+    unique: true,
+    nullable: true,
+  })
   employeeCode!: string | null;
 
   @Column({ name: 'full_name', type: 'varchar', length: 255, nullable: true })
